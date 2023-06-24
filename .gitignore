@@ -1,0 +1,40 @@
+# Generated files
+assignment/article_texts/
+# assignment/output.json
+
+# Virtual environment
+venv/
+env/
+bin/
+include/
+lib/
+lib64/
+lib64
+share/
+pyvenv.cfg
+
+# Scraped data
+*.json
+
+# Scraped media files
+media/
+
+# Scrapy project-specific files
+.env
+.env.*
+*.log
+*.jl
+*.jl.gz
+
+# Python compiled bytecode
+__pycache__/
+
+# Development and IDE files
+.vscode/
+.idea/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+.DS_Store
