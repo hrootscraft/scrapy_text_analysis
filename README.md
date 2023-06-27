@@ -1,6 +1,6 @@
 <h3>INSTRUCTIONS</h3>
 
-This project scrapes articles from given list of URLs (assignment/Input.csv) and then performs text analysis on the articles obtained to output those metrics in another csv file (assignment/output.xlsx)
+This project scrapes articles from given list of URLs (assignment/Input.csv) and then performs text analysis on the articles obtained to output those metrics in an xlsx file (assignment/output.xlsx)
 <br>
 In a gist, you run the following commands to get the end result:
 Assuming you are in the root directory,
