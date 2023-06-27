@@ -1,15 +1,12 @@
-from get_metrics import (
-    create_stopwords,
-    remove_punct,
-    remove_nltk_stopwords,
-    remove_custom_stopwords,
+from preprocess_text import (
+    create_posv_words_list,
+    create_negv_words_list,
 )
 import re
 
 
-# Positive | Negative score
-def posv_or_negv_score(cleaned_words_list, posv_or_negv_words):
-    return sum(1 for word in cleaned_words_list if word in posv_or_negv_words)
+posv_words_list = create_posv_words_list()
+negv_words_list = create_negv_words_list()
 
 
 # Polarity score : Range is from -1 to +1
@@ -18,8 +15,8 @@ def polarity_score(posv_score, negv_score):
 
 
 # Subjectivity score : Range is from 0 to +1
-def subjective_score(posv_score, negv_score, cleaned_words_list):
-    return (posv_score + negv_score) / (len(cleaned_words_list) + 0.000001)
+def subjectivity_score(posv_score, negv_score, cleaned_word_count):
+    return (posv_score + negv_score) / (cleaned_word_count + 0.000001)
 
 
 # Avg sentence length
@@ -35,13 +32,13 @@ def avg_sent_len(words_list, sent_list):
 def avg_words_per_sentence(sentence_list):
     word_count = 0
     for sentence in sentence_list:
-        for i in sentence:
-            word_count += 1
+        words = sentence.split()
+        word_count += len(words)
     try:
         x = word_count / len(sentence_list)
     except:
         x = 0
-    return (word_count, x)
+    return x
 
 
 # Count of complex words
@@ -86,12 +83,14 @@ def average_syllable_count_per_word(word_list):
 
 # Percentage of comples words
 def percent_complex_words(word_list):
+    if len(word_list) == 0:
+        return 0
     return count_complex_words(word_list) / len(word_list)
 
 
 # Fog index
-def fog_index(sentence_list, word_list):
-    return 0.4 * (avg_sent_len(sentence_list) + percent_complex_words(word_list))
+def fog_index(average_sent_len, pcent_compl_words):
+    return 0.4 * (average_sent_len + pcent_compl_words)
 
 
 # Count of personal pronouns
@@ -110,15 +109,21 @@ def avg_word_len(word_list):
     return total_characters / len(word_list)
 
 
-# Clean word count
-custom_stopwords = create_stopwords()
+# utility function
+def get_dict(word_list):
+    pnd = {"p": [], "n": []}
+    for word in word_list:
+        if word in posv_words_list:
+            pnd["p"].append(word)
+        elif word in negv_words_list:
+            pnd["n"].append(word)
+    return pnd
 
 
-def word_count(word_list):
-    # Remove punctuation
-    cleaned_word_list = remove_punct(word_list)
-    # Remove NLTK stopwords
-    cleaned_word_list = remove_nltk_stopwords(cleaned_word_list)
-    # Remove custom stopwords
-    cleaned_word_list = remove_custom_stopwords(cleaned_word_list, custom_stopwords)
-    return len(cleaned_word_list)
+def avg_word_length(word_list):
+    if len(word_list) == 0:
+        return 0  # or any other appropriate value when the list is empty
+    total_characters = sum(len(word) for word in word_list)
+    total_words = len(word_list)
+    average_length = total_characters / total_words
+    return average_length

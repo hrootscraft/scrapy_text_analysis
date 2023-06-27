@@ -2,14 +2,15 @@ import json
 import nltk
 from nltk.corpus import stopwords
 import os
-import string
+import re
 
 
-# Read output.json and get the articles body
+# Read output.json (file created by spider) and get the articles body
 def get_json_output():
     try:
         with open("output.json", "r", encoding="utf-8") as json_file:
             output_data = json.load(json_file)
+            return output_data
     except FileNotFoundError:
         print("output.json not found")
     except IOError:
@@ -47,7 +48,6 @@ def create_stopwords():
         custom_stopwords_dir = r"stopwords"
         for i in os.listdir(custom_stopwords_dir):
             with open(custom_stopwords_dir + "/" + i, "r", encoding="utf-8") as f:
-                print(f)
                 data = f.read()
                 custom_stopwords_list = data.lower().split("\n")
         custom_stopwords = list(map(lambda i: i.lower(), custom_stopwords_list))
@@ -88,6 +88,10 @@ def remove_nltk_stopwords(tokens):
 def remove_punct(word_list):
     cleaned_words = []
     for word in word_list:
-        cleaned_word = word.translate(str.maketrans("", "", string.punctuation))
-        cleaned_words.append(cleaned_word)
+        # remove all punctuations
+        cleaned_word = re.sub(r"[^\w\s]", "", word)
+        # remove the numbers
+        cleaned_word = cleaned_word if not re.match(r"^\d+$", cleaned_word) else ""
+        if cleaned_word:
+            cleaned_words.append(cleaned_word)
     return cleaned_words
