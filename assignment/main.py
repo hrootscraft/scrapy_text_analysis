@@ -84,6 +84,6 @@ for item in json_output:
     item["average_word_length"] = avg_word_length(article_word_tokens_wo_punct)
 
 
-# # Open the file in write mode and save the JSON object
-# with open("output.json", "w") as json_file:
-#     json.dump(json_output, json_file)
+# Open the file in write mode and save the JSON object
+with open("output.json", "w") as json_file:
+    json.dump(json_output, json_file)
